@@ -17,17 +17,8 @@ int main(int argc, char **argv)
 {
   int i, j, n = strtol(argv[1], NULL, 0);
   uint64_t t, m[101];
-  std::vector<int> *v;
+  std::vector<int> v;
   
-  try
-    {
-      v = new std::vector<int>;
-    }
-  catch(const std::bad_alloc &)
-    {
-      err(1, "new vector");
-    }
-
   t = ntime();
   m[0] = 0;
   try
@@ -36,21 +27,19 @@ int main(int argc, char **argv)
         {
           for (j = 0; j < n / 100; j ++)
             {
-              v->push_back(i);
+              v.push_back(j);
             }
           m[i / (n / 100) + 1] = ntime() - t;
         }
     }
   catch(const std::bad_alloc&)
     {
-      err(1, "push_back %d", i);
+      err(1, "std::vector::push_back %d", i);
     }
   
   (void) fprintf(stdout, "\"size\",\"time\"\n");
   for (i = 0; i <= 100; i ++)
     (void) fprintf(stdout, "%d,%f\n", i * (n / 100), (float) m[i] / 1000000000);
-
-  delete v;
 
   exit(0);
 }
