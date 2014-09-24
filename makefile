@@ -14,6 +14,9 @@ vector_grow_c: vector_grow_c.o
 
 vector_grow_cpp: vector_grow_cpp.cpp
 
+vector_grow_rust:
+	rustc vector_grow_rust.rs
+
 .java.class:
 	javac -Xlint $<
 
@@ -32,8 +35,11 @@ vector_grow_java_trove.csv: VectorGrowJavaTrove.class
 vector_grow_lua.csv:
 	luajit vector_grow_lua.lua $(MAX) > vector_grow_lua.csv
 
-vector_grow.pdf: vector_grow_c.csv vector_grow_cpp.csv vector_grow_java.csv vector_grow_java_trove.csv vector_grow_lua.csv
+vector_grow_rust.csv:
+	./vector_grow_rust $(MAX) > vector_grow_rust.csv
+
+vector_grow.pdf: vector_grow_c.csv vector_grow_cpp.csv vector_grow_java.csv vector_grow_java_trove.csv vector_grow_lua.csv vector_grow_rust.csv
 	./vector_grow.R
 
 clean:
-	rm -f vector_grow_c vector_grow_cpp *.class *.o *.csv *.pdf
+	rm -f vector_grow_c vector_grow_cpp vector_grow_rust *.class *.o *.csv *.pdf
