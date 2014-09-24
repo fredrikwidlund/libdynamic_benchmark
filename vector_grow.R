@@ -24,6 +24,6 @@ graph <- ggplot(legend = TRUE) +
   scale_y_continuous(trans = log_trans(), breaks = 10^(-3:2), labels = comma, minor_breaks = log(sapply(10^(-3:2), function(x) seq(0, x, x/10)))) +
   scale_x_continuous(breaks = seq(10^7, 10^8, 10^7), labels = f2si) +
   scale_colour_manual("",
-                      breaks = c("LuaJIT", "Java Vector<Integer>", "Java Trove TIntArrayList", "C++ std::vector", "C libdynamic vector"),
+                      breaks = c("Java Vector<Integer>", "Java Trove TIntArrayList", "LuaJIT", "C++ std::vector", "C libdynamic vector"),
                       values = c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00"))
 ggsave(graph, file = "vector_grow.pdf", width = 10, height = 5)

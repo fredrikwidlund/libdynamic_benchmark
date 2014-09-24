@@ -6,13 +6,15 @@ function main(arg)
    local n = tonumber(arg[1])
    local m = {}
    local v = {}
+   local index = 1
    local t
 
    t = socket.gettime()
    m[0] = 0
    for i = 0, n - 1, n / 100 do
       for j = 0, (n / 100) - 1 do
-         table.insert(v, j)
+         v[index] = j
+         index = index + 1
       end
       m[i / (n / 100) + 1] = socket.gettime() - t;
    end
