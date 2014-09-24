@@ -21,7 +21,7 @@ graph <- ggplot(legend = TRUE) +
   geom_line(data = data.vector_grow_java      , aes(x = size, y = time, colour = "Java Vector<Integer>")) +
   geom_line(data = data.vector_grow_java_trove, aes(x = size, y = time, colour = "Java Trove TIntArrayList")) +
   geom_line(data = data.vector_grow_lua       , aes(x = size, y = time, colour = "LuaJIT")) +
-  scale_y_continuous(trans=log_trans(), breaks = 10^(-3:2), minor_breaks = log(sapply(10^(-3:2), function(x) seq(0, x, x/10)))) +
+  scale_y_continuous(trans = log_trans(), breaks = 10^(-3:2), labels = comma, minor_breaks = log(sapply(10^(-3:2), function(x) seq(0, x, x/10)))) +
   scale_x_continuous(breaks = seq(10^7, 10^8, 10^7), labels = f2si) +
   scale_colour_manual("",
                       breaks = c("LuaJIT", "Java Vector<Integer>", "Java Trove TIntArrayList", "C++ std::vector", "C libdynamic vector"),
