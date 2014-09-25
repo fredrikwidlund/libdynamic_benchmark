@@ -13,7 +13,7 @@ fn main() {
 
     let t = time::precise_time_ns();
     m.push(0);
-    for i in iter::range_step(0, n, n/100) {
+    for _i in iter::range_step(0, n, n/100) {
         for j in range(0, n/100) {
             v.push(j);
         }

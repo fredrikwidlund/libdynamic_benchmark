@@ -26,19 +26,27 @@ vector_grow_c.csv: vector_grow_c
 vector_grow_cpp.csv: vector_grow_cpp
 	./vector_grow_cpp $(MAX) > vector_grow_cpp.csv
 
-vector_grow_java.csv: VectorGrowJava.class
-	java -Xmx3500m VectorGrowJava $(MAX) > vector_grow_java.csv
+vector_grow_java_vector.csv: VectorGrowJavaVector.class
+	java -Xmx3500m VectorGrowJavaVector $(MAX) > vector_grow_java_vector.csv
+
+vector_grow_java_array_list.csv: VectorGrowJavaArrayList.class
+	java -Xmx3500m VectorGrowJavaArrayList $(MAX) > vector_grow_java_array_list.csv
 
 vector_grow_java_trove.csv: VectorGrowJavaTrove.class
 	java -Xmx3500m VectorGrowJavaTrove $(MAX) > vector_grow_java_trove.csv
 
-vector_grow_lua.csv:
-	luajit vector_grow_lua.lua $(MAX) > vector_grow_lua.csv
+vector_grow_lua_table.csv:
+	luajit vector_grow_lua_table.lua $(MAX) > vector_grow_lua_table.csv
 
-vector_grow_rust.csv:
+vector_grow_lua_assign.csv:
+	luajit vector_grow_lua_assign.lua $(MAX) > vector_grow_lua_assign.csv
+
+vector_grow_rust.csv: vector_grow_rust
 	./vector_grow_rust $(MAX) > vector_grow_rust.csv
 
-vector_grow.pdf: vector_grow_c.csv vector_grow_cpp.csv vector_grow_java.csv vector_grow_java_trove.csv vector_grow_lua.csv vector_grow_rust.csv
+vector_grow.pdf: vector_grow_c.csv vector_grow_cpp.csv vector_grow_java_vector.csv \
+		 vector_grow_java_array_list.csv vector_grow_java_trove.csv vector_grow_lua_table.csv \
+	         vector_grow_lua_assign.csv vector_grow_rust.csv
 	./vector_grow.R
 
 clean:

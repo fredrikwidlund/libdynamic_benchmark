@@ -1,6 +1,6 @@
 import java.util.Vector;
 
-public class VectorGrowJava {
+public class VectorGrowJavaVector {
     public static void main(String args[]) {
         int i, j = 0, n = Integer.parseInt(args[0]);
         long[] m;

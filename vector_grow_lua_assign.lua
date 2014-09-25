@@ -16,7 +16,7 @@ function main(arg)
          v[index] = j
          index = index + 1
       end
-      m[i / (n / 100) + 1] = socket.gettime() - t;
+      m[i / (n / 100) + 1] = socket.gettime() - t
    end
 
    print("\"size\",\"time\"\n")
