@@ -15,7 +15,7 @@ vector_grow_c: vector_grow_c.o
 vector_grow_cpp: vector_grow_cpp.cpp
 
 vector_grow_rust:
-	rustc vector_grow_rust.rs
+	rustc --cfg ndebug --opt-level 3 --debuginfo 0 vector_grow_rust.rs
 
 .java.class:
 	javac -Xlint $<
