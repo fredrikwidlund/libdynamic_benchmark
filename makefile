@@ -1,6 +1,6 @@
 CFLAGS   	= -Wall -Werror -Wpedantic -O3 -std=c11 -flto
 CXXFLAGS 	= -Wall -Werror -Wpedantic -O3 -std=c++11 -flto
-LDADD    	= -ldynamic
+LDADD    	= -ldynamic -ljemalloc
 MAX      	= 100000000
 CLASSPATH	= .:/opt/trove/lib/trove-3.0.3.jar
 

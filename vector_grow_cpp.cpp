@@ -15,9 +15,8 @@ uint64_t ntime()
 
 int main(int argc, char **argv)
 {
-  int i, j, n = strtol(argv[1], NULL, 0);
-  uint64_t t, m[101];
-  std::vector<int> v;
+  uint64_t i, j, t, m[101], n = strtol(argv[1], NULL, 0);
+  std::vector<uint64_t> v;
   
   t = ntime();
   m[0] = 0;
@@ -34,12 +33,12 @@ int main(int argc, char **argv)
     }
   catch(const std::bad_alloc&)
     {
-      err(1, "std::vector::push_back %d", i);
+      err(1, "std::vector::push_back %ld", i);
     }
   
   (void) fprintf(stdout, "\"size\",\"time\"\n");
   for (i = 0; i <= 100; i ++)
-    (void) fprintf(stdout, "%d,%f\n", i * (n / 100), (float) m[i] / 1000000000);
+    (void) fprintf(stdout, "%ld,%f\n", i * (n / 100), (float) m[i] / 1000000000);
 
   exit(0);
 }

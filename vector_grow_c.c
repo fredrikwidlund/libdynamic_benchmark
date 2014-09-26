@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include <dynamic.h>
 #include <err.h>
+#include <jemalloc/jemalloc.h>
 
 uint64_t ntime()
 {
@@ -15,8 +16,7 @@ uint64_t ntime()
 
 int main(int argc, char **argv)
 {
-  int i, j, e, n = strtol(argv[1], NULL, 0);
-  uint64_t t, m[101];
+  uint64_t i, j, e, t, m[101], n = strtol(argv[1], NULL, 0);
   vector v;
 
   vector_init(&v, sizeof i);
@@ -29,14 +29,14 @@ int main(int argc, char **argv)
         {
           e = vector_push_back(&v, &j);
           if (e == -1)
-            err(1, "vector_push_back %d", j);
+            err(1, "vector_push_back %ld", j);
         }
       m[i / (n / 100) + 1] = ntime() - t;
     }
 
   (void) fprintf(stdout, "\"size\",\"time\"\n");
   for (i = 0; i <= 100; i ++)
-    (void) fprintf(stdout, "%d,%f\n", i * (n / 100), (float) m[i] / 1000000000);
+    (void) fprintf(stdout, "%ld,%f\n", i * (n / 100), (float) m[i] / 1000000000);
 
   vector_clear(&v);
 
