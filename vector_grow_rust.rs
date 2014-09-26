@@ -7,7 +7,7 @@ use std::iter;
 
 fn main() {
     let args = os::args();
-    let n: uint = from_str(args[1].as_slice()).expect("Bad argv");
+    let n: u32 = from_str(args[1].as_slice()).expect("Bad argv");
     let mut v = Vec::new();
     let mut m = Vec::with_capacity(101);
 
@@ -23,6 +23,6 @@ fn main() {
     println!("\"size\",\"time\"");
     for (i, t) in m.iter().enumerate() {
         let time = t.to_f32().expect("Bad float conversion")/1000000000.0;
-        println!("{},{}", i * (n / 100), time);
+        println!("{},{}", i * (n as uint / 100), time);
     }
 }
