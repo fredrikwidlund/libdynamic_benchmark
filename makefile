@@ -3,8 +3,8 @@ CXXFLAGS 	  = -Wall -Werror -Wpedantic -O3 -std=c++11 -flto
 LDADD    	  = -ldynamic
 MAX      	  = 100000000
 CLASSPATH	  = .:/opt/trove/lib/trove-3.0.3.jar
-RUSTC_BIN_BUILD   = /root/build/rust-nightly/x86_64-unknown-linux-gnu/stage2/
-RUSTC_NO_JEMALLOC = LD_LIBRARY_PATH=$(RUSTC_BIN_BUILD)/lib $(RUSTC_BIN_BUILD)bin/rustc
+RUSTC_BIN_BUILD   = /root/build/rust-nightly/x86_64-unknown-linux-gnu/stage2
+RUSTC_NO_JEMALLOC = LD_LIBRARY_PATH=$(RUSTC_BIN_BUILD)/lib $(RUSTC_BIN_BUILD)/bin/rustc
 
 
 .SUFFIXES: .java .class
@@ -27,7 +27,7 @@ vector_grow_rust_no_jemalloc: vector_grow_rust.rs
 	$(RUSTC_NO_JEMALLOC) --cfg ndebug --opt-level 3 --debuginfo 0 -o $@ $^
 
 .java.class:
-	javac -Xlint $<
+	javac -cp $(CLASSPATH) -Xlint $<
 
 vector_grow_c.csv: vector_grow_c
 	./vector_grow_c $(MAX) > vector_grow_c.csv
@@ -39,13 +39,13 @@ vector_grow_cpp.csv: vector_grow_cpp
 	./vector_grow_cpp $(MAX) > vector_grow_cpp.csv
 
 vector_grow_java_vector.csv: VectorGrowJavaVector.class
-	java -Xmx3500m VectorGrowJavaVector $(MAX) > vector_grow_java_vector.csv
+	java -cp $(CLASSPATH) -Xmx5000m VectorGrowJavaVector $(MAX) > vector_grow_java_vector.csv
 
 vector_grow_java_array_list.csv: VectorGrowJavaArrayList.class
-	java -Xmx3500m VectorGrowJavaArrayList $(MAX) > vector_grow_java_array_list.csv
+	java -cp $(CLASSPATH) -Xmx5000m VectorGrowJavaArrayList $(MAX) > vector_grow_java_array_list.csv
 
 vector_grow_java_trove.csv: VectorGrowJavaTrove.class
-	java -Xmx3500m VectorGrowJavaTrove $(MAX) > vector_grow_java_trove.csv
+	java -cp $(CLASSPATH) -Xmx5000m VectorGrowJavaTrove $(MAX) > vector_grow_java_trove.csv
 
 vector_grow_lua_table.csv:
 	luajit vector_grow_lua_table.lua $(MAX) > vector_grow_lua_table.csv
