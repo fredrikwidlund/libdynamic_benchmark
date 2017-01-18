@@ -35,16 +35,6 @@ To compile run:
     $ ./configure
     $ make
 
-If you obtained the source from a Git repository (or any other source
-control system), there's no ``./configure`` script as it's not kept in
-version control. To create the script, the build system needs to be
-bootstrapped. There are many ways to do this, but the easiest one is
-to use the supplied autogen.sh script:
-
-.. code-block:: shell
-
-    $ ./autogen.sh
-
 Benchmarking
 ============
 
