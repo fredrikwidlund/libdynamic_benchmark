@@ -22,8 +22,12 @@ static const map_metric metrics[] = {
   {.name = "C tommyds", .measure = map_tommyds},
   {.name = "C libdynamic", .measure = map_dynamic}
 };
-
 static const size_t metrics_len = sizeof metrics / sizeof metrics[0];
+
+static int    set_int_empty = -1;
+static size_t set_int_hash(void *e) {return *(int *) e;}
+static int    set_int_equal(void *e1, void *e2) {return *(int *) e1 == *(int *) e2;}
+static void   set_int_set(void *e1, void *e2) {*(int *) e1 = *(int *) e2;}
 
 static void shuffle(int *array, size_t n)
 {
@@ -44,15 +48,24 @@ static void shuffle(int *array, size_t n)
 
 static void fill(int *key, int *value, int *lookup, size_t n)
 {
+  map m;
   size_t i;
 
-  for (i = 0; i < n; i ++)
+  map_construct(&m, sizeof(int), &set_int_empty, set_int_set);
+
+  i = 0;
+  while (i < n)
     {
       key[i] = random();
+      if (*(int *) map_at(&m, &key[i], set_int_hash, set_int_equal) != -1)
+        continue;
+      map_insert(&m, &key[i], set_int_hash, set_int_equal, set_int_set, NULL);
       value[i] = key[i];
       lookup[i] = key[i];
+      i ++;
     }
 
+  map_destruct(&m, NULL, NULL);
   shuffle(lookup, n);
 }
 
