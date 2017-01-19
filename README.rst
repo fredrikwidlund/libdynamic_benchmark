@@ -1,7 +1,9 @@
+.. figure:: https://cloud.githubusercontent.com/assets/2116262/22069446/bdd60120-dd98-11e6-87d9-9eb789e6fa9f.png
+   
+   Intel(R) Xeon(R) CPU E5-2623 v3 @ 3.00GH
+
 README
 ======
-
-.. image:: https://cloud.githubusercontent.com/assets/2116262/22069446/bdd60120-dd98-11e6-87d9-9eb789e6fa9f.png
 
 This is a benchmark of libdynamic performance in comparison to other relevant
 libraries.
