@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-uint64_t map_std_unordered(int *, int *, int *, size_t, size_t, map_result *);
+void map_std_unordered(int *, int *, int *, size_t, size_t, double *, double *, double *, uint64_t *);
 
 #ifdef __cplusplus
 } /* extern "C" */

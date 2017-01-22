@@ -1,33 +1,60 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include <math.h>
 #include <time.h>
-#include <assert.h>
-#include <dynamic.h>
+#include "dynamic.h"
 
-#include "map.h"
 #include "map_std_unordered.h"
-#include "map_densehash.h"
-#include "map_ulib.h"
+#include "map_google_densehash.h"
 #include "map_khash.h"
-#include "map_tommyds.h"
-#include "map_dynamic.h"
+#include "map_custom.h"
+#include "map_libdynamic.h"
+#include "map_libdynamic_subclass.h"
 
-static const map_metric metrics[] = {
-  {.name = "C++ std::unordered_map", .measure = map_std_unordered},
-  {.name = "C++ google::dense_hash_map", .measure = map_densehash},
-  {.name = "C++ ulib::align_hash_map", .measure = map_ulib},
-  {.name = "C khash", .measure = map_khash},
-  {.name = "C tommyds", .measure = map_tommyds},
-  {.name = "C libdynamic", .measure = map_dynamic}
+typedef struct library library;
+struct library
+{
+  char  *name;
+  void (*measure)(int *, int *, int *, size_t, size_t, double *, double *, double *, uint64_t *);
 };
-static const size_t metrics_len = sizeof metrics / sizeof metrics[0];
 
-static int    set_int_empty = -1;
-static size_t set_int_hash(void *e) {return *(int *) e;}
-static int    set_int_equal(void *e1, void *e2) {return *(int *) e1 == *(int *) e2;}
-static void   set_int_set(void *e1, void *e2) {*(int *) e1 = *(int *) e2;}
+typedef struct metric metric;
+struct metric
+{
+  char     *name;
+  size_t    size;
+  double    insert;
+  double    lookup;
+  double    delete;
+  uint64_t  sum;
+};
+
+typedef struct input input;
+struct input
+{
+  size_t  size;
+  int    *keys;
+  int    *keys_shuffled;
+  int    *values;
+};
+
+static library libraries[] = {
+  {.name = "std::map_unordered", .measure = map_std_unordered},
+  {.name = "google::dense_hash_map", .measure = map_google_densehash},
+  {.name = "khash", .measure = map_khash},
+  {.name = "libdynamic", .measure = map_libdynamic}
+};
+static const size_t libraries_len = sizeof libraries / sizeof libraries[0];
+
+uint64_t ntime(void)
+{
+  struct timespec ts;
+
+  (void) clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+  return ((uint64_t) ts.tv_sec * 1000000000) + ((uint64_t) ts.tv_nsec);
+}
 
 static void shuffle(int *array, size_t n)
 {
@@ -46,96 +73,116 @@ static void shuffle(int *array, size_t n)
     }
 }
 
-static void fill(int *key, int *value, int *lookup, size_t n)
+static int set_int_empty = -1;
+
+static size_t set_int_hash(map *m, void *e)
+{
+  (void) m;
+  return *(int *) e;
+}
+
+static int set_int_equal(map *m, void *e1, void *e2)
+{
+  (void) m;
+  return *(int *) e1 == *(int *) e2;
+}
+
+static void set_int_set(map *m, void *e1, void *e2)
+{
+  (void) m;
+  *(int *) e1 = *(int *) e2;
+}
+
+static void input_construct(input *input, size_t size)
 {
   map m;
-  size_t i;
+
+  input->size = 0;
+  input->keys = malloc(size * sizeof input->keys[0]);
+  input->keys_shuffled = malloc(size * sizeof input->keys_shuffled[0]);
+  input->values = malloc(size * sizeof input->values[0]);
 
   map_construct(&m, sizeof(int), &set_int_empty, set_int_set);
 
-  i = 0;
-  while (i < n)
+  while (input->size < size)
     {
-      key[i] = random();
-      if (*(int *) map_at(&m, &key[i], set_int_hash, set_int_equal) != -1)
+      input->keys[input->size] = random();
+      if (*(int *) map_at(&m, &input->keys[input->size], set_int_hash, set_int_equal) != -1)
         continue;
-      map_insert(&m, &key[i], set_int_hash, set_int_equal, set_int_set, NULL);
-      value[i] = key[i];
-      lookup[i] = key[i];
-      i ++;
+      map_insert(&m, &input->keys[input->size], set_int_hash, set_int_equal, set_int_set, NULL);
+
+      input->keys_shuffled[input->size] = input->keys[input->size];
+      input->values[input->size] = random();
+      input->size ++;
     }
 
   map_destruct(&m, NULL, NULL);
-  shuffle(lookup, n);
+
+  shuffle(input->keys_shuffled, input->size);
 }
 
-static uint64_t checksum(int *lookup, size_t size, size_t iterations)
+static void input_destruct(input *input)
 {
-  uint64_t i, sum = 0;
-
-  for (i = 0; i < iterations; i ++)
-    sum += lookup[i % size];
-  return sum;
+  free(input->keys);
+  free(input->keys_shuffled);
+  free(input->values);
 }
 
-static void aggregate(map_result *r, map_result *ri)
+static void metric_aggregate(metric *ma, metric *mi)
 {
-  if (!r->lookup || ri->lookup < r->lookup)
-    r->lookup = ri->lookup;
-}
-
-uint64_t ntime(void)
-{
-  struct timespec ts;
-
-  (void) clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
-  return ((uint64_t) ts.tv_sec * 1000000000) + ((uint64_t) ts.tv_nsec);
+  if (!ma->insert || ma->insert > mi->insert)
+    ma->insert = mi->insert;
+  if (!ma->lookup || ma->lookup > mi->lookup)
+    ma->lookup = mi->lookup;
+  if (!ma->delete || ma->delete > mi->delete)
+    ma->delete = mi->delete;
+  ma->sum += mi->sum;
 }
 
 int main()
 {
-  vector results;
-  size_t i, round, rounds = 5, n, n_min = 100, n_max = 1000000, iterations = 10000;
-  double k = 1.1;
-  int *key, *value, *lookup;
-  uint64_t sum, si;
-  const map_metric *m;
-  map_result result, r, *ri;
+  size_t size, size_min, size_max, rounds, lookups, r, i;
+  double size_factor;
+  vector metrics;
+  input input;
+  metric metric, mr, *mp;
 
-  vector_construct(&results, sizeof result);
-  for (n = n_min; n < n_max; n = ceil(k * n))
+  /* benchmark settings */
+  size_min = 100;
+  size_max = 10000000;
+  size_factor = 1.1;
+  rounds = 5;
+  lookups = 100000;
+
+  vector_construct(&metrics, sizeof metric);
+
+  /* iterate through libraries */
+  for (size = size_min; size < size_max; size = ceil(size_factor * size))
     {
-      (void) fprintf(stderr, "size %lu\n", n);
-      key = malloc(n * sizeof *key);
-      value = malloc(n * sizeof *value);
-      lookup = malloc(n * sizeof *lookup);
-      assert(key && value && lookup);
-      fill(key, value, lookup, n);
-      sum = checksum(lookup, n, iterations);
+      input_construct(&input, size);
 
-      for (m = metrics; m < &metrics[metrics_len]; m ++)
+      for (i = 0; i < libraries_len; i ++)
         {
-          result = (map_result){.name = m->name, .size = n};
-          for (round = 0; round < rounds; round ++)
+          metric = (struct metric) {.name = libraries[i].name, .size = input.size};
+          for (r = 0; r < rounds; r ++)
             {
-              si = m->measure(key, value, lookup, n, iterations, &r);
-              assert(si == sum);
-              aggregate(&result, &r);
+              libraries[i].measure(input.keys, input.keys_shuffled, input.values, input.size, lookups,
+                                   &mr.insert, &mr.lookup, &mr.delete, &mr.sum);
+              metric_aggregate(&metric, &mr);
             }
-          vector_push_back(&results, &result);
+          vector_push_back(&metrics, &metric);
         }
 
-      free(key);
-      free(value);
-      free(lookup);
+      input_destruct(&input);
     }
 
-  (void) fprintf(stdout, "name,size,lookup\n");
-  for (i = 0; i < vector_size(&results); i ++)
+  /* output resulting metrics */
+  (void) fprintf(stdout, "name,size,insert,lookup,delete,checksum\n");
+  for (i = 0; i < vector_size(&metrics); i ++)
     {
-      ri = vector_at(&results, i);
-      (void) fprintf(stdout, "%s,%lu,%f\n", ri->name, ri->size, ri->lookup);
+      mp = vector_at(&metrics, i);
+      (void) fprintf(stdout, "%s,%lu,%f,%f,%f,%lu\n", mp->name, mp->size, mp->insert, mp->lookup, mp->delete, mp->sum);
     }
 
-  vector_destruct(&results);
+  vector_destruct(&metrics);
 }

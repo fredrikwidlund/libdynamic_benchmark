@@ -9,8 +9,16 @@ AM_LDFLAGS = $(COMMON_FLAGS)
 bin_PROGRAMS = map
 
 map_SOURCES = \
-src/map.c src/map_dynamic.c src/map_std_unordered.cpp src/map_densehash.cpp src/map_ulib.cpp src/map_khash.c src/map_tommyds.c \
-support/tommyds/tommyhash.c support/tommyds/tommyhashdyn.c support/tommyds/tommylist.c \
+src/map.c \
+src/map_std_unordered.cpp \
+src/map_google_densehash.cpp \
+src/map_khash.c \
+src/map_libdynamic.c \
+src/map.h \
+src/map_std_unordered.h \
+src/map_google_densehash.h \
+src/map_khash.h \
+src/map_libdynamic.h \
 src/map.R
 map_LDADD = -ldynamic
 

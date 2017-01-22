@@ -1,24 +1,25 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <time.h>
 #include <sys/param.h>
+#include <assert.h>
 #include <err.h>
 
-#include <unordered_map>
+#include <sparsehash/dense_hash_map>
 
 #include "map.h"
-#include "map_std_unordered.h"
+#include "map_google_densehash.h"
 
-void map_std_unordered(int *keys, int *keys_shuffled, int *values, size_t size, size_t lookups,
-                       double *insert, double *lookup, double *erase, uint64_t *sum)
+void map_google_densehash(int *keys, int *keys_shuffled, int *values, size_t size, size_t lookups,
+                          double *insert, double *lookup, double *erase, uint64_t *sum)
 {
-  std::unordered_map<int, int> m;
-  std::unordered_map<int, int>::iterator iter;
+  google::dense_hash_map<int, int> m;
+  google::dense_hash_map<int, int>::iterator iter;
   size_t i, n;
   uint64_t t1, t2, s;
 
   m.max_load_factor(0.5);
+  m.set_empty_key(-1);
+  m.set_deleted_key(-2);
 
   t1 = ntime();
   for (i = 0; i < size; i ++)
