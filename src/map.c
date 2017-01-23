@@ -9,6 +9,8 @@
 #include "map_std_unordered.h"
 #include "map_google_densehash.h"
 #include "map_khash.h"
+#include "map_ulib_align_hash_map.h"
+#include "map_tommyds_hashdyn.h"
 #include "map_libdynamic.h"
 
 typedef struct library library;
@@ -41,6 +43,8 @@ struct input
 static library libraries[] = {
   {.name = "std::map_unordered", .measure = map_std_unordered},
   {.name = "google::dense_hash_map", .measure = map_google_densehash},
+  {.name = "ulib::align_hash_map", .measure = map_ulib_align_hash_map},
+  {.name = "tommyds hashdyn", .measure = map_tommyds_hashdyn},
   {.name = "khash", .measure = map_khash},
   {.name = "libdynamic", .measure = map_libdynamic}
 };

@@ -12,11 +12,18 @@ map_SOURCES = \
 src/map.c \
 src/map_std_unordered.cpp \
 src/map_google_densehash.cpp \
+src/map_ulib_align_hash_map.cpp \
+src/map_tommyds_hashdyn.c \
 src/map_khash.c \
 src/map_libdynamic.c \
+support/tommyds/tommyhash.c \
+support/tommyds/tommyhashdyn.c \
+support/tommyds/tommylist.c \
 src/map.h \
 src/map_std_unordered.h \
 src/map_google_densehash.h \
+src/map_ulib_align_hash_map.h \
+src/map_tommyds_hashdyn.h \
 src/map_khash.h \
 src/map_libdynamic.h \
 src/map.R
