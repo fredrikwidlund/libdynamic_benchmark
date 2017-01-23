@@ -9,9 +9,7 @@
 #include "map_std_unordered.h"
 #include "map_google_densehash.h"
 #include "map_khash.h"
-#include "map_custom.h"
 #include "map_libdynamic.h"
-#include "map_libdynamic_subclass.h"
 
 typedef struct library library;
 struct library
@@ -157,7 +155,7 @@ int main()
   vector_construct(&metrics, sizeof metric);
 
   /* iterate through libraries */
-  for (size = size_min; size < size_max; size = ceil(size_factor * size))
+  for (size = size_max; size > size_min; size = floor(size / size_factor))
     {
       input_construct(&input, size);
 
