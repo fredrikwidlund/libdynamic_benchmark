@@ -12,7 +12,7 @@ Results
 Description
 ======
 
-This is a benchmark of libdynamic performance in comparison to other relevant
+This is a benchmark of `libdynamic`_ performance in comparison to other relevant
 libraries.
 
 It currently contains a single benchmark comparing lookups in a hash map using
