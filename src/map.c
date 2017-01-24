@@ -4,7 +4,9 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
-#include "dynamic.h"
+#include "dynamic/buffer.h"
+#include "dynamic/vector.h"
+#include "dynamic/map.h"
 
 #include "map_std_unordered.h"
 #include "map_google_densehash.h"

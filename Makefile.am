@@ -19,6 +19,9 @@ src/map_libdynamic.c \
 support/tommyds/tommyhash.c \
 support/tommyds/tommyhashdyn.c \
 support/tommyds/tommylist.c \
+support/dynamic/buffer.c \
+support/dynamic/vector.c \
+support/dynamic/map.c \
 src/map.h \
 src/map_std_unordered.h \
 src/map_google_densehash.h \
@@ -27,7 +30,6 @@ src/map_tommyds_hashdyn.h \
 src/map_khash.h \
 src/map_libdynamic.h \
 src/map.R
-map_LDADD = -ldynamic
 
 benchmark: map.pdf
 

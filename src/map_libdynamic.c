@@ -5,7 +5,7 @@
 #include <err.h>
 #include <time.h>
 
-#include "dynamic.h"
+#include "dynamic/map.h"
 #include "map.h"
 
 typedef struct map_element map_element;

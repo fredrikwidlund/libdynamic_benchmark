@@ -24,8 +24,8 @@ Compiling
 
 The source uses GNU Autotools (autoconf_, automake_, libtool_).
 
-To benchmark depends on libdynamic_ and `Google sparsehash`_ so please build
-and install these first.
+To benchmark depends on `Google sparsehash`_ so please build
+and install it first.
 
 To create the PDF graph, `R`_ needs to be installed, together with the
 R-packages ggplot2, scales and sitools. Information about how to install

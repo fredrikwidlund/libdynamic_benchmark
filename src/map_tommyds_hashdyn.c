@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <sys/param.h>
 #include <err.h>
-#include <dynamic.h>
 
 #include "tommyds/tommyhashdyn.h"
 #include "map.h"
