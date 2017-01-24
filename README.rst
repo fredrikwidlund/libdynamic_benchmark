@@ -9,7 +9,7 @@ Results
 
   .. figure:: https://cloud.githubusercontent.com/assets/2116262/22249382/175dc198-e243-11e6-9594-556c6f0eb15e.png
 
-README
+Description
 ======
 
 This is a benchmark of libdynamic performance in comparison to other relevant
