@@ -5,7 +5,7 @@ Results
 
   .. figure:: https://cloud.githubusercontent.com/assets/2116262/22257487/86d6985e-e25e-11e6-9e41-9ed8381668b4.png
 
-* ``Intel(R) Xeon(R) CPU E5530 @ 2.40GHz/gcc v4.9.3``
+* ``Intel(R) Xeon(R) CPU E5530 @ 2.40GHz/gcc v4.8.5``
 
   .. figure:: https://cloud.githubusercontent.com/assets/2116262/22249382/175dc198-e243-11e6-9594-556c6f0eb15e.png
 
